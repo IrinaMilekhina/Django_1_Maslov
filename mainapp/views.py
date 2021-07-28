@@ -2,7 +2,8 @@ from django.shortcuts import render
 
 
 def main(request):
-    return render(request, 'mainapp/index.html')
+    content = {}
+    return render(request, 'mainapp/index.html', content)
 
 
 def products(request):
