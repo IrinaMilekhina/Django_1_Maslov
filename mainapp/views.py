@@ -1,4 +1,14 @@
+import json
+import os
+
 from django.shortcuts import render
+
+JSON_PATH = 'mainapp/json'
+
+
+def load_from_json(file_name):
+    with open(os.path.join(JSON_PATH, file_name + '.json'), 'r', encoding='utf-8') as infile:
+        return json.load(infile)
 
 
 def main(request):
@@ -22,5 +32,9 @@ def products(request):
 
 
 def contact(request):
-    content = {'title': 'Контакты'}
+    locations = load_from_json('contact__locations')
+    content = {
+        'title': 'Контакты',
+        'locations': locations,
+    }
     return render(request, 'mainapp/contact.html', content)
