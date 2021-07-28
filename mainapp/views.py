@@ -2,13 +2,15 @@ from django.shortcuts import render
 
 
 def main(request):
-    content = {}
+    content = {'title': 'Магазин'}
     return render(request, 'mainapp/index.html', content)
 
 
 def products(request):
-    return render(request, 'mainapp/products.html')
+    content = {'title': 'Продукты'}
+    return render(request, 'mainapp/products.html', content)
 
 
 def contact(request):
-    return render(request, 'mainapp/contact.html')
+    content = {'title': 'Контакты'}
+    return render(request, 'mainapp/contact.html', content)
