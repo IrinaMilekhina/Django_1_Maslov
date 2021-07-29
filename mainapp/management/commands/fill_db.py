@@ -26,7 +26,7 @@ class Command(BaseCommand):
         
         
         products = load_from_json('products')
-
+        
         Product.objects.all().delete()
         for product in products:
             category_name = product["category"]
@@ -38,6 +38,6 @@ class Command(BaseCommand):
             new_product.save()
 
         # Создаем суперпользователя при помощи менеджера модели
-        super_user = ShopUser.objects.create_superuser('django', 'django@geekshop.local', 'geekbrains', age=30)
+        super_user = ShopUser.objects.create_superuser('django', 'django@geekshop.local', 'geekbrains', age=33)
         
 
