@@ -11,7 +11,7 @@ def login(request):
 
     login_form = ShopUserLoginForm(data=request.POST or None)
 
-    # next = request.GET['next'] if 'next' in request.GET.keys() else ''
+    next = request.GET['next'] if 'next' in request.GET.keys() else ''
     # print('next', next)
 
     if request.method == 'POST' and login_form.is_valid():
@@ -30,7 +30,7 @@ def login(request):
     content = {
         'title': title,
         'login_form': login_form,
-        # 'next': next
+        'next': next
     }
 
     return render(request, 'authapp/login.html', content)
