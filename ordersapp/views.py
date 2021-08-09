@@ -47,13 +47,18 @@ class OrderItemCreate(CreateView):
         context = self.get_context_data()
         orderitems = context['orderitems']
 
-        form.instance.user = self.request.user
-        self.object = form.save()
-        if orderitems.is_valid():
-            orderitems.instance = self.object
-            orderitems.save()
+        with transaction.atomic():
+            Basket.get_items(self.request.user).delete()
+            form.instance.user = self.request.user
+            self.object = form.save()
+            if orderitems.is_valid():
+                orderitems.instance = self.object
+                orderitems.save()
 
-        return super().form_valid(form)
+            if self.object.get_total_cost() == 0:
+                self.object.delete()
+
+        return super(OrderItemCreate, self).form_valid(form)
 
 
 class OrderItemUpdate(UpdateView):
@@ -65,8 +70,8 @@ class OrderItemUpdate(UpdateView):
         data = super().get_context_data(**kwargs)
         OrderFormset = inlineformset_factory(Order, OrderItem, form=OrderItemForm, extra=1)
 
-        if self.request.method == 'POST':
-            formset = OrderFormset(self.request.POST, instance=self.object)
+        if self.request.POST:
+            data['orderitems'] = OrderFormset(self.request.POST, instance=self.object)
         else:
             formset = OrderFormset(instance=self.object)
 
@@ -77,11 +82,14 @@ class OrderItemUpdate(UpdateView):
         context = self.get_context_data()
         orderitems = context['orderitems']
 
-        form.instance.user = self.request.user
-        self.object = form.save()
-        if orderitems.is_valid():
-            orderitems.instance = self.object
-            orderitems.save()
+        with transaction.atomic():
+            self.object = form.save()
+            if orderitems.is_valid():
+                orderitems.instance = self.object
+                orderitems.save()
+
+        if self.object.get_total_cost() == 0:
+            self.object.delete()
 
         return super().form_valid(form)
 
