@@ -1,0 +1,25 @@
+1  la -la
+2  cd /home/django/
+3  la -la
+4  cd Django_Maslov/
+5  git pull
+6  python3 manage.py fill_db
+7  source env/bin/activate
+8  python3 manage.py fill_db
+9  chown -R django /home/django/Django_Maslov/
+10  nano /etc/systemd/system/gunicorn.service
+11  pip3 install gunicorn
+12  syslemctl enable gunicorn
+13  systemctl enable gunicorn
+14  systemctl start gunicorn
+15  systemctl status gunicorn
+16  mcedit /etc/nginx/sites-available/geekshop
+17  ln -s /etc/nginx/sites-available/geekshop /etc/nginx/sites-enabled/
+18  mc
+19  nginx -t
+20  nano /etc/systemd/system/gunicorn.service
+21  mcedit /etc/nginx/sites-available/geekshop
+22  nginx -t
+23  systemctl restart nginx
+24  systemctl status nginx
+25  history
