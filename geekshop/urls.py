@@ -12,12 +12,12 @@ urlpatterns = [
     path('contact/', mainapp.contact, name='contact'),
     path('auth/', include('authapp.urls', namespace='auth')),
     path('basket/', include('basketapp.urls', namespace='basket')),
-
     path('admin/', include('adminapp.urls', namespace='admin')),
 
     path('', include('social_django.urls', namespace='social')),
-    path('logout/', LogoutView, {'next_page': settings.LOGOUT_REDIRECT_URL},
-         name='logout'),
+    path('logout/', LogoutView, {'next_page': settings.LOGOUT_REDIRECT_URL}, name='logout'),
+
+    path('orders/', include('ordersapp.urls', namespace='ordersapp')),
 ]
 
 if settings.DEBUG:

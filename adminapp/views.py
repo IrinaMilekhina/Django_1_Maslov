@@ -9,7 +9,9 @@ from django.views.generic.list import ListView
 from authapp.forms import ShopUserRegisterForm
 from authapp.models import ShopUser
 from mainapp.models import Product, ProductCategory
-from .forms import ProductEditForm, ShopUserAdminEditForm
+from ordersapp.models import Order
+from ordersapp.views import OrderItemUpdate
+from .forms import ProductEditForm, ShopUserAdminEditForm, OrderEditForm
 
 
 class UsersListView(ListView):
@@ -193,3 +195,42 @@ def product_delete(request, pk):
     }
 
     return render(request, 'adminapp/product_delete.html', content)
+
+
+class OrdersListView(ListView):
+    model = Order
+    template_name = 'adminapp/orders.html'
+
+    @method_decorator(user_passes_test(lambda u: u.is_superuser))
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
+
+
+def order_update(request, pk):
+    title = 'заказ/редактирование'
+
+    edit_order = get_object_or_404(Order, pk=pk)
+
+    if request.method == 'POST':
+        edit_form = OrderEditForm(request.POST, instance=edit_order)
+        if edit_form.is_valid():
+            edit_form.save()
+            return HttpResponseRedirect(reverse('admin:order_update', args=[edit_order.pk]))
+    else:
+        edit_form = OrderEditForm(instance=edit_order)
+
+    content = {'title': title, 'update_form': edit_form, }
+
+    return render(request, 'adminapp/order_update.html', content)
+
+
+class OrderCategoryDeleteView(DeleteView):
+    model = Order
+    template_name = 'adminapp/order_delete.html'
+    success_url = reverse_lazy('admin:orders')
+
+    def delete(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        self.object.is_active = False
+        self.object.save()
+        return HttpResponseRedirect(self.get_success_url())
