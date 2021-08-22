@@ -1,3 +1,6 @@
+from django.db import transaction
+from django.db.models.signals import pre_save, pre_delete
+from django.dispatch import receiver
 from django.forms import inlineformset_factory
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
@@ -35,8 +38,8 @@ class OrderItemCreate(CreateView):
                 for num, form in enumerate(formset.forms):
                     form.initial['product'] = basket_items[num].product
                     form.initial['quantity'] = basket_items[num].quantity
-                # if formset.is_valid():
-                #     basket_items.delete()
+                    form.initial['price'] = basket_items[num].product.price
+                    form.initial['in_stock'] = basket_items[num].product.quantity
             else:
                 formset = OrderFormset()
 
@@ -47,13 +50,18 @@ class OrderItemCreate(CreateView):
         context = self.get_context_data()
         orderitems = context['orderitems']
 
-        form.instance.user = self.request.user
-        self.object = form.save()
-        if orderitems.is_valid():
-            orderitems.instance = self.object
-            orderitems.save()
+        with transaction.atomic():
+            Basket.get_items(self.request.user).delete()
+            form.instance.user = self.request.user
+            self.object = form.save()
+            if orderitems.is_valid():
+                orderitems.instance = self.object
+                orderitems.save()
 
-        return super().form_valid(form)
+            if self.object.get_total_cost() == 0:
+                self.object.delete()
+
+        return super(OrderItemCreate, self).form_valid(form)
 
 
 class OrderItemUpdate(UpdateView):
@@ -65,11 +73,14 @@ class OrderItemUpdate(UpdateView):
         data = super().get_context_data(**kwargs)
         OrderFormset = inlineformset_factory(Order, OrderItem, form=OrderItemForm, extra=1)
 
-        if self.request.method == 'POST':
-            formset = OrderFormset(self.request.POST, instance=self.object)
+        if self.request.POST:
+            data['orderitems'] = OrderFormset(self.request.POST, instance=self.object)
         else:
             formset = OrderFormset(instance=self.object)
-
+            for form in formset.forms:
+                if form.instance.pk:
+                    form.initial['price'] = form.instance.product.price
+                    form.initial['in_stock'] = form.instance.product.quantity
         data['orderitems'] = formset
         return data
 
@@ -77,11 +88,14 @@ class OrderItemUpdate(UpdateView):
         context = self.get_context_data()
         orderitems = context['orderitems']
 
-        form.instance.user = self.request.user
-        self.object = form.save()
-        if orderitems.is_valid():
-            orderitems.instance = self.object
-            orderitems.save()
+        with transaction.atomic():
+            self.object = form.save()
+            if orderitems.is_valid():
+                orderitems.instance = self.object
+                orderitems.save()
+
+        if self.object.get_total_cost() == 0:
+            self.object.delete()
 
         return super().form_valid(form)
 
@@ -101,3 +115,22 @@ def order_forming_complete(request, pk):
     order_item.save()
 
     return HttpResponseRedirect(reverse('ordersapp:order_read', args=[order_item.pk]))
+
+
+@receiver(pre_save, sender=OrderItem)
+@receiver(pre_save, sender=Basket)
+def product_quantity_update_on_save(sender, update_fields, instance, **kwargs):
+    # if 'quantity' in update_fields or 'product' in update_fields
+    if instance.pk:
+        instance.product.quantity -= instance.quantity - sender.object.get(pk=instance.pk).quantity
+    #   на скалад -= новая корзина - старая корзина
+    else:
+        instance.product.quantity -= instance.quantity
+    instance.product.save()
+
+
+@receiver(pre_delete, sender=OrderItem)
+@receiver(pre_delete, sender=Basket)
+def product_quantity_update_on_delete(sender, instance, **kwargs):
+    instance.product.quantity += instance.quantity
+    instance.product.save()
