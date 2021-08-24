@@ -9,3 +9,6 @@ pillow
 requests
 gunicorn
 social-auth-app-django
+
+django-debug-toolbar
+django-debug-toolbar-profiler
