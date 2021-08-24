@@ -12,3 +12,4 @@ social-auth-app-django
 
 django-debug-toolbar
 django-debug-toolbar-template-profiler
+wheel
