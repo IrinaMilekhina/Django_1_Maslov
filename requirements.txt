@@ -11,4 +11,4 @@ gunicorn
 social-auth-app-django
 
 django-debug-toolbar
-django-debug-toolbar-profiler
+django-debug-toolbar-template-profiler
