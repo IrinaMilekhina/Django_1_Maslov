@@ -52,7 +52,7 @@ class OrderItemCreate(CreateView):
         orderitems = context['orderitems']
 
         with transaction.atomic():
-            Basket.get_items(self.request.user).delete()
+            # Basket.get_items(self.request.user).delete()
             form.instance.user = self.request.user
             self.object = form.save()
             if orderitems.is_valid():
