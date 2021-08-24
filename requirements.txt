@@ -15,3 +15,5 @@ django-debug-toolbar-template-profiler
 wheel
 
 django-extensions
+
+pydotplus
