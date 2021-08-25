@@ -47,11 +47,11 @@ def products(request, pk=None, page=1):
                 'pk': 0,
                 'name': 'все'
             }
-            products = Product.objects.filter(is_active=True, category__is_active=True).order_by('price')
+            products = Product.objects.filter(is_active=True, category__is_active=True).order_by('price').select_related()
         else:
             category = get_object_or_404(ProductCategory, pk=pk)
             products = Product.objects.filter(category__pk=pk, is_active=True, category__is_active=True).order_by(
-                'price')
+                'price').select_related()
 
         paginator = Paginator(products, 2)
         try:
@@ -85,7 +85,7 @@ def products(request, pk=None, page=1):
 
 def product(request, pk):
     title = 'продукты'
-    links_menu = ProductCategory.objects.filter(is_active=True)
+    links_menu = ProductCategory.objects.filter(is_active=True).select_related()
 
     product = get_object_or_404(Product, pk=pk)
 
