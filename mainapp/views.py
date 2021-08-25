@@ -14,13 +14,13 @@ def load_from_json(file_name):
 
 
 def get_hot_product():
-    products = Product.objects.filter(is_active=True, category__is_active=True)
+    products = Product.objects.filter(is_active=True, category__is_active=True).select_related()
 
     return random.sample(list(products), 1)[0]
 
 
 def get_same_products(hot_product):
-    same_products = Product.objects.filter(category=hot_product.category, is_active=True).exclude(pk=hot_product.pk)[:3]
+    same_products = Product.objects.filter(category=hot_product.category, is_active=True).exclude(pk=hot_product.pk).select_related()[:3]
 
     return same_products
 
@@ -39,7 +39,7 @@ def main(request):
 
 def products(request, pk=None, page=1):
     title = 'продукты'
-    links_menu = ProductCategory.objects.filter(is_active=True)
+    links_menu = ProductCategory.objects.filter(is_active=True).select_related()
 
     if pk is not None:
         if pk == 0:
