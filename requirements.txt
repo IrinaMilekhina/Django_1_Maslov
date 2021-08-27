@@ -17,3 +17,5 @@ wheel
 django-extensions
 
 pydotplus
+
+python-memcached
