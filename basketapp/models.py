@@ -1,5 +1,7 @@
 from django.db import models
 from django.conf import settings
+from django.utils.functional import cached_property
+
 from mainapp.models import Product
 
 
@@ -19,6 +21,14 @@ class Basket(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField(verbose_name='количество', default=0)
     add_datetime = models.DateTimeField(verbose_name='время добавления', auto_now_add=True)
+
+    @cached_property
+    def elements(self):
+        return Basket.objects.filter(user=self.user).select_related()
+
+    @cached_property
+    def product_price(self):
+        return self.product.price
 
     def _get_product_cost(self):
         "return cost of all products this type"
