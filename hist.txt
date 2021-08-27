@@ -1,25 +1,64 @@
-1  la -la
-2  cd /home/django/
-3  la -la
-4  cd Django_Maslov/
-5  git pull
-6  python3 manage.py fill_db
-7  source env/bin/activate
-8  python3 manage.py fill_db
-9  chown -R django /home/django/Django_Maslov/
-10  nano /etc/systemd/system/gunicorn.service
-11  pip3 install gunicorn
-12  syslemctl enable gunicorn
-13  systemctl enable gunicorn
-14  systemctl start gunicorn
-15  systemctl status gunicorn
-16  mcedit /etc/nginx/sites-available/geekshop
-17  ln -s /etc/nginx/sites-available/geekshop /etc/nginx/sites-enabled/
-18  mc
-19  nginx -t
-20  nano /etc/systemd/system/gunicorn.service
-21  mcedit /etc/nginx/sites-available/geekshop
-22  nginx -t
-23  systemctl restart nginx
-24  systemctl status nginx
-25  history
+ 1  ls -la
+    2  cd /home/django
+    3  cd Django_Maslov
+    4  source env/bin/activate
+    5  git pull
+    6  pip3 install -r requirements.txt
+    7  nano requirements.txt
+    8  git pull
+    9  pip3 install -r requirements.txt
+   10  git pull
+   11  pip3 install -r requirements.txt
+   12  git pull
+   13  pip3 install -r requirements.txt
+   14  nano geekshop/settings.py
+   15  git pull
+   16  systemctl restart guincorn
+   17  systemctl restart gunicorn
+   18  python3 manage.py collectstatic
+   19  git pull
+   20  python3 manage.py collectstatic
+   21  git pull
+   22  systemctl restart gunicorn
+   23  git pull
+   24  pip3 install -r requirements.txt
+   25  systemctl restart gunicorn
+   26  git pull
+   27  pip3 install -r requirements.txt
+   28  python3 manage.py graph_models -a -g -o gb.png
+   29  apt install graphviz
+   30  python3 manage.py graph_models -a -g -o gb.png
+   31  mc
+   32  src --help
+   33  scp --help
+   34  scp gb.png C:\Users\Ira\Downloads
+   35  apt install siege
+   36  touch urls.txt
+   37  nano urls.txt
+   38  siege -f /home/django/Django_Maslov/urls.txt -d0 -r9 -c1
+   39  siege -f /home/django/Django_Maslov/urls.txt -d0 -r9 -c4
+   40  siege -f /home/django/Django_Maslov/urls.txt -d0 -r9 -c1 -debug
+   41  siege -f /home/django/Django_Maslov/urls.txt -d0 -r9 -c1 --debug
+   42  ls -la
+   43  history
+   44  git pull
+   45  systemctl restart gunicorn
+   46  nano urls.txt
+   47  siege -f /home/django/Django_Maslov/urls.txt -d0 -r1 -c1 --debug
+   48  git pull
+   49  systemctl restart gunicorn
+   50  siege -f /home/django/Django_Maslov/urls.txt -d0 -r1 -c1 --debug
+   51  siege -f /home/django/Django_Maslov/urls.txt -d0 -r2 -c1
+   52  nano urls.txt
+   53  nano /root/.siege/siege.conf
+   54  nano urls.txt
+   55  siege -f /home/django/Django_Maslov/urls.txt -d0 -r2 -c1
+   56  git pull
+   57  systemctl restart gunicorn
+   58  siege -f /home/django/Django_Maslov/urls.txt -d0 -r2 -c1
+   59  systemctl restart gunicorn
+   60  git pull
+   61  systemctl restart gunicorn
+   62  git pull
+   63  systemctl restart gunicorn
+

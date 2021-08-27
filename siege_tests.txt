@@ -1,0 +1,38 @@
+Странца редактирования заказа:
+
+До оптимизации 65 запросов в базу
+siege -f /home/django/Django_Maslov/urls.txt -d0 -r2 -c1
+** SIEGE 4.0.4
+** Preparing 1 concurrent users for battle.
+The server is now under siege...
+Transactions:		          20 hits
+Availability:		      100.00 %
+Elapsed time:		        3.45 secs
+Data transferred:	        0.84 MB
+Response time:		        0.17 secs
+Transaction rate:	        5.80 trans/sec
+Throughput:		        0.24 MB/sec
+Concurrency:		        1.00
+Successful transactions:          20
+Failed transactions:	           0
+Longest transaction:	        1.92
+Shortest transaction:	        0.00
+
+После оптимизации 11 запросов в базу
+siege -f /home/django/Django_Maslov/urls.txt -d0 -r2 -c1
+** SIEGE 4.0.4
+** Preparing 1 concurrent users for battle.
+The server is now under siege...
+Transactions:		          20 hits
+Availability:		      100.00 %
+Elapsed time:		        1.07 secs
+Data transferred:	        0.67 MB
+Response time:		        0.05 secs
+Transaction rate:	       18.69 trans/sec
+Throughput:		        0.62 MB/sec
+Concurrency:		        1.00
+Successful transactions:          20
+Failed transactions:	           0
+Longest transaction:	        0.55
+Shortest transaction:	        0.00
+
