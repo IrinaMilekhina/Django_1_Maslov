@@ -212,6 +212,7 @@ SOCIAL_AUTH_PIPELINE = (
     'social_core.pipeline.user.user_details',
 )
 
+LOW_CACHE = False
 if os.name == 'posix':
     CACHE_MIDDLEWARE_ALIAS = 'default'
     CACHE_MIDDLEWARE_SECONDS = 120
@@ -224,4 +225,4 @@ if os.name == 'posix':
         }
     }
 
-LOW_CACHE = True
+    LOW_CACHE = True
