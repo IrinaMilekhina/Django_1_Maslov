@@ -40,16 +40,6 @@
                                         {{ field }}
                                     {% endif %}
                                 {% else %}
-                                    {% if field.name == 'in_stock' %}
-                                        {% if field.value %}
-                                            <span class="orderitems-{{ forloop.parentloop.counter0 }}-in_stock">
-                                            {{ field.value }}
-                                        </span> шт.
-                                        {% endif %}
-                                    {% else %}
-                                        {{ field }}
-                                    {% endif %}
-                                {% else %}
                                     {{ field }}
                                 {% endif %}
                             </td>
