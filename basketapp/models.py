@@ -22,15 +22,17 @@ class Basket(models.Model):
     quantity = models.PositiveIntegerField(verbose_name='количество', default=0)
     add_datetime = models.DateTimeField(verbose_name='время добавления', auto_now_add=True)
 
+    @cached_property
     def _get_product_cost(self):
         "return cost of all products this type"
         return self.product.price * self.quantity
 
     product_cost = property(_get_product_cost)
 
+    @cached_property
     def _get_total_quantity(self):
         "return total quantity for user"
-        _items = Basket.objects.filter(user=self.user)
+        _items = Basket.objects.filter(user=self.user).select_related()
         _totalquantity = sum(list(map(lambda x: x.quantity, _items)))
         return _totalquantity
 
