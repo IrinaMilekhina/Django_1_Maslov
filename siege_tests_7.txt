@@ -1,0 +1,80 @@
+Добавление with:
+http://80.78.248.46/orders/read/1/
+До:
+siege -f /home/django/Django_Maslov/urls.txt -d0 -r5 -c5
+Elapsed time:		        6.78 secs
+Longest transaction:	        1.82
+
+После:
+siege -f /home/django/Django_Maslov/urls.txt -d0 -r5 -c5
+Elapsed time:		        5.27 secs
+Longest transaction:	        1.32
+
+
+Добавление низкоуровневого кеширования:
+http://80.78.248.46/products/category/13/
+До:
+siege -f /home/django/Django_Maslov/urls.txt -d0 -r10 -c5
+Elapsed time:		        8.88 secs
+Data transferred:	       17.58 MB
+Response time:		        0.07 secs
+Transaction rate:	       67.57 trans/sec
+Throughput:		        1.98 MB/sec
+Concurrency:		        4.78
+Successful transactions:         600
+Longest transaction:	        1.24
+
+После:
+siege -f /home/django/Django_Maslov/urls.txt -d0 -r10 -c5
+Elapsed time:		        4.16 secs
+Data transferred:	       17.20 MB
+Response time:		        0.03 secs
+Transaction rate:	      144.23 trans/sec
+Throughput:		        4.13 MB/sec
+Concurrency:		        4.89
+Successful transactions:         600
+Longest transaction:	        0.60
+
+Добавление @cached_property, лучше не стало:
+До 5 запросов в базу:
+siege -f /home/django/Django_Maslov/urls.txt -d0 -r10 -c5
+Elapsed time:		        9.83 secs
+Data transferred:	       17.13 MB
+Response time:		        0.07 secs
+Transaction rate:	       71.21 trans/sec
+Throughput:		        1.74 MB/sec
+Concurrency:		        4.88
+Longest transaction:	        1.35
+
+После 13 запросов в базу:
+siege -f /home/django/Django_Maslov/urls.txt -d0 -r10 -c5
+Elapsed time:		       10.40 secs
+Data transferred:	       17.13 MB
+Response time:		        0.07 secs
+Transaction rate:	       67.31 trans/sec
+Throughput:		        1.65 MB/sec
+Concurrency:		        4.86
+Longest transaction:	        1.37
+
+Кеширование фрагментов шаблона:
+http://80.78.248.46/orders/update/1/
+До:
+siege -f /home/django/Django_Maslov/urls.txt -d0 -r10 -c5
+Elapsed time:		       24.19 secs
+Data transferred:	       16.55 MB
+Response time:		        0.23 secs
+Transaction rate:	       20.67 trans/sec
+Throughput:		        0.68 MB/sec
+Concurrency:		        4.82
+Longest transaction:	        3.12
+
+После:
+siege -f /home/django/Django_Maslov/urls.txt -d0 -r10 -c5
+Elapsed time:		       19.84 secs
+Data transferred:	       16.15 MB
+Response time:		        0.19 secs
+Transaction rate:	       25.20 trans/sec
+Throughput:		        0.81 MB/sec
+Concurrency:		        4.76
+Longest transaction:	        2.72
+
