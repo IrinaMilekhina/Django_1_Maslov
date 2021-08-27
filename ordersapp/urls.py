@@ -5,7 +5,7 @@ from ordersapp import views
 app_name = 'ordersapp'
 
 urlpatterns = [
-    path('', views.OrderList.as_view(), name='orders_list'),
+    path('', views.OrderListView.as_view(), name='orders_list'),
     path('create/', views.OrderItemCreate.as_view(), name='order_create'),
     path('read/<pk>/', views.OrderItemRead.as_view(), name='order_read'),
     path('update/<pk>/', views.OrderItemUpdate.as_view(), name='order_update'),
