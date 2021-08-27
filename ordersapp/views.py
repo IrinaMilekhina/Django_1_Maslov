@@ -13,7 +13,7 @@ from ordersapp.forms import OrderItemForm
 from ordersapp.models import Order, OrderItem
 
 
-class OrderListView(ListView):
+class OrderList(ListView):
     model = Order
 
     def get_queryset(self):
@@ -27,24 +27,23 @@ class OrderItemCreate(CreateView):
 
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
-        OrderFormSet = inlineformset_factory(Order, OrderItem, form=OrderItemForm, extra=1)
-        formset = OrderFormSet()
+        OrderFormset = inlineformset_factory(Order, OrderItem, form=OrderItemForm, extra=1)
 
         if self.request.method == 'POST':
-            formset = OrderFormSet(self.request.POST)
+            formset = OrderFormset(self.request.POST)
         else:
             basket_items = Basket.objects.filter(user=self.request.user).select_related()
             if basket_items.exists():
-                OrderFormSet = inlineformset_factory(Order, OrderItem, form=OrderItemForm, extra=basket_items.count())
-                formset = OrderFormSet()
+                OrderFormset = inlineformset_factory(Order, OrderItem, form=OrderItemForm, extra=basket_items.count())
+                formset = OrderFormset()
                 for num, form in enumerate(formset.forms):
                     form.initial['product'] = basket_items[num].product
                     form.initial['quantity'] = basket_items[num].quantity
                     form.initial['price'] = basket_items[num].product.price
-                    form.initial['total_price'] = basket_items[num].sum()
                     form.initial['in_stock'] = basket_items[num].product.quantity
             else:
-                formset = OrderFormSet()
+                formset = OrderFormset()
+
         data['orderitems'] = formset
         return data
 
@@ -73,12 +72,12 @@ class OrderItemUpdate(UpdateView):
 
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
-        OrderFormSet = inlineformset_factory(Order, OrderItem, form=OrderItemForm, extra=1)
-        formset = OrderFormSet()
+        OrderFormset = inlineformset_factory(Order, OrderItem, form=OrderItemForm, extra=1)
+
         if self.request.POST:
-            data['orderitems'] = OrderFormSet(self.request.POST, instance=self.object)
+            data['orderitems'] = OrderFormset(self.request.POST, instance=self.object)
         else:
-            formset = OrderFormSet(instance=self.object)
+            formset = OrderFormset(instance=self.object)
             for form in formset.forms:
                 if form.instance.pk:
                     form.initial['price'] = form.instance.product.price
