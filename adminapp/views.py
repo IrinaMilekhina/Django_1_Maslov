@@ -111,10 +111,10 @@ class ProductCategoryUpdateView(UpdateView):
         return context
 
     def form_valid(self, form):
-        if 'discount' in form.cleaned_data:
-            discount = form.cleaned_data['discount']
-            if discount:
-                self.object.product_set.update(price=F('price') * (1 - discount / 100))
+        if 'sale' in form.cleaned_data:
+            sale = form.cleaned_data['sale']
+            if sale:
+                self.object.product_set.update(price=F('price') * (1 - sale))
         return super().form_valid(form)
 
 
