@@ -5,6 +5,7 @@ from django.utils.decorators import method_decorator
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
 from django.views.generic.list import ListView
+from django.db.models import F
 
 from authapp.forms import ShopUserRegisterForm
 from authapp.models import ShopUser
@@ -108,6 +109,13 @@ class ProductCategoryUpdateView(UpdateView):
         context = super().get_context_data(**kwargs)
         context['title'] = 'категории/редактирование'
         return context
+
+    def form_valid(self, form):
+        if 'discount' in form.cleaned_data:
+            discount = form.cleaned_data['discount']
+            if discount:
+                self.object.product_set.update(price=F('price') * (1 - discount / 100))
+        return super().form_valid(form)
 
 
 class ProductCategoryDeleteView(DeleteView):
