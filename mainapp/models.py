@@ -1,10 +1,15 @@
 from django.db import models
+from django.core.validators import MaxValueValidator, MinValueValidator
 
 
 class ProductCategory(models.Model):
     name = models.CharField(verbose_name='название категории', max_length=64, unique=True)
     description = models.TextField(verbose_name='описание категории', blank=True)
     is_active = models.BooleanField(verbose_name='категория активна', default=True)
+    sale = models.FloatField(default=0, validators=[
+        MaxValueValidator(1),
+        MinValueValidator(0)
+    ])
     
     def __str__(self):
         return self.name
