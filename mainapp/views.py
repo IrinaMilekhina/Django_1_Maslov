@@ -99,6 +99,12 @@ def get_hot_product():
     return random.sample(list(products), 1)[0]
 
 
+def get_same_products(hot_product):
+    same_products = Product.objects.filter(category=hot_product.category, is_active=True).exclude(pk=hot_product.pk)[:3]
+
+    return same_products
+
+
 def main(request):
     title = 'главная'
     products = get_products()[:3]
@@ -109,12 +115,6 @@ def main(request):
     }
 
     return render(request, 'mainapp/index.html', content)
-
-
-def get_same_products(hot_product):
-    same_products = get_same_products(hot_product)
-
-    return same_products
 
 
 def products(request, pk=None, page=1):
